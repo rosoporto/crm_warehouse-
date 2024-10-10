@@ -1,3 +1,9 @@
-from django.shortcuts import render
+from django.http import HttpResponse
 
-# Create your views here.
+
+def wrhs_index_page(request):
+    return HttpResponse('<h1>Главная страница Warehouse App</h1>')
+
+
+def wrhs_get_categories_id(request, cat_id):
+    return HttpResponse(f'Категория ID: {cat_id}')

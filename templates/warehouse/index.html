@@ -1,0 +1,18 @@
+{% extends 'layout.html' %}
+{% load bootstrap4 %}
+{% load i18n %}
+{% get_current_language as LANGUAGE_CODE %}
+
+
+{% block content %}
+      <h1>Категории</h1>
+      <p><small><a href="{% url 'category_create' %}">Создать категорию</a></small></p>
+      <ul>
+        {% for category in categories %}
+        <li>          
+          <h2><a class="link" href="{% url 'category_single' category.id %}">{{ category.name }}</a></h2>
+          <div>{{ category.description|slice:":200" }}</div>
+        </li>
+        {% endfor %}
+      </ul>
+{% endblock %}
