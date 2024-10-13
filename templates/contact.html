@@ -3,7 +3,8 @@
 {% load i18n %}
 {% get_current_language as LANGUAGE_CODE %}
 
-
 {% block content %}
-    <h1>Добро пожаловать на страницу приложения склада</h1>
+      <h1>{{ title }}</h1>
+      <p>Телефон: {{ phone }}</p>
+      <p>Почта: {{ email }}</p>
 {% endblock %}
