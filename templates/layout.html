@@ -1,5 +1,6 @@
 {% load bootstrap4 %}
 {% load i18n %}
+{% load static %}
 {% get_current_language as LANGUAGE_CODE %}
 
 <!DOCTYPE html>
@@ -8,6 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>{{ title }} | CRM Warehouse</title>
     {% bootstrap_css %}
+    {% block custom_css %}{% endblock %}
   </head>
   <body class="bg-light">
     <div class="container mt-4">
