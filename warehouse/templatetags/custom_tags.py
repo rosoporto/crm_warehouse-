@@ -1,5 +1,6 @@
 from datetime import datetime
 from django import template
+import pytz
 
 
 register = template.Library()
@@ -8,9 +9,8 @@ register = template.Library()
 @register.simple_tag
 def show_time():
     """Return the current time in the format H:M:S"""
-    dt = datetime.now(tz='Europe/Moscow')
-    if dt is None:
-        raise ValueError("datetime.now(tz='Europe/Moscow') returned None")
+    moscow_tz = pytz.timezone('Europe/Moscow')
+    dt = datetime.now(moscow_tz)
     return dt.strftime("%H:%M:%S")
 
 

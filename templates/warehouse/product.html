@@ -1,1 +1,13 @@
-<img src="{{ product.image.url }}" alt="{{ product.name }}">
+{% extends 'layout.html' %}
+{% load bootstrap4 %}
+{% load i18n %}
+{% load custom_tags %}
+{% get_current_language as LANGUAGE_CODE %}
+
+
+{% block content %}
+<h1>{{ product.name }}</h1>
+    {% if product.image %}
+        <img class="img-thumbnail" src="../..{{ product.image.url }}" alt="{{ product.name }}">
+    {% endif %}
+{% endblock %}

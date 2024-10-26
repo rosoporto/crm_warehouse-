@@ -14,6 +14,9 @@ lint:
 shell:
 	python manage.py shell
 
+shell-plus:
+	python manage.py shell_plus --print-sql
+
 clean:
 	rm -rf migrations/
 

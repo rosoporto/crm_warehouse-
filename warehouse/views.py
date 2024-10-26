@@ -1,6 +1,7 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from .forms import ProductForm, OrderForm
+from .models import Product
 
 
 def wrhs_index_page(request):
@@ -43,3 +44,15 @@ def create_order(request):
     else:
         form = OrderForm()
     return render(request, 'order_form.html', {'form': form})
+
+
+def wrhs_product_list(request):
+    products = Product.objects.all()
+    return render(
+        request, 'warehouse/product_list.html', {'products': products}
+    )
+
+
+def wrhs_get_product(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    return render(request, 'warehouse/product.html', {'product': product})

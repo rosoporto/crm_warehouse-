@@ -1,5 +1,6 @@
 from django import forms
-from .models import Product, Inventory, Order, Client
+from .models import Product, Inventory, Order, Client, OrderItem
+from django.forms import inlineformset_factory
 
 
 class ProductForm(forms.ModelForm):
@@ -8,8 +9,7 @@ class ProductForm(forms.ModelForm):
         fields = ['name',
                   'description',
                   'article',
-                  'price',
-                  'quantity',
+                  'price',                  
                   'image',
                   'is_active',
                   'category',
@@ -25,7 +25,7 @@ class ProductForm(forms.ModelForm):
 class InventoryForm(forms.ModelForm):
     class Meta:
         model = Inventory
-        fields = ['product', 'quantity', 'minimum_quantity']  # Добавляем новое поле
+        fields = ['product', 'quantity']  # Добавляем новое поле
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -51,32 +51,6 @@ class InventoryForm(forms.ModelForm):
         return minimum_quantity
 
 
-class OrderForm(forms.ModelForm):
-    class Meta:
-        model = Order
-        fields = [
-            'product',
-            'quantity',
-            'channel',
-            'status',
-            'comments',
-            'client'
-        ]
-        widgets = {
-            'client': forms.Select(attrs={'class': 'form-control'}),  # Добавляем класс для стилизации
-        }
-
-    def __init__(self, *args, **kwargs):
-        super(OrderForm, self).__init__(*args, **kwargs)
-        self.fields['client'].queryset = Client.objects.all()  # Заполняем выбор клиентов
-
-    def save(self, commit=True):
-        order = super().save(commit=False)
-        if commit:
-            order.save()
-        return order
-
-
 class ClientForm(forms.ModelForm):
     class Meta:
         model = Client
@@ -91,3 +65,26 @@ class ClientForm(forms.ModelForm):
         if commit:
             client.save()
         return client
+
+
+class OrderForm(forms.ModelForm):
+    class Meta:
+        model = Order
+        fields = ['channel', 'status', 'comments', 'client']
+
+
+class OrderItemForm(forms.ModelForm):
+    class Meta:
+        model = OrderItem
+        fields = ['product', 'quantity']
+        
+    def __init__(self, *args, **kwargs):
+        super(OrderItemForm, self).__init__(*args, **kwargs)
+        # Получаем все продукты, которые есть на складе
+        available_products = Inventory.objects.filter(quantity__gt=0).values_list('product', flat=True)
+        self.fields['product'].queryset = Product.objects.filter(id__in=available_products)
+
+
+OrderItemFormSet = inlineformset_factory(
+    Order, OrderItem, form=OrderItemForm, extra=1, can_delete=True
+)
